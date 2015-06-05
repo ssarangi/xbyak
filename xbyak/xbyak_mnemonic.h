@@ -135,8 +135,8 @@ void unpcklpd(const Xmm& xmm, const Operand& op) { opGen(xmm, op, 0x14, 0x66, is
 void xorps(const Xmm& xmm, const Operand& op) { opGen(xmm, op, 0x57, 0x100, isXMM_XMMorMEM); }
 void xorpd(const Xmm& xmm, const Operand& op) { opGen(xmm, op, 0x57, 0x66, isXMM_XMMorMEM); }
 void maskmovdqu(const Xmm& reg1, const Xmm& reg2) { db(0x66);  opModR(reg1, reg2, 0x0F, 0xF7); }
-void movhlps(const Xmm& reg1, const Xmm& reg2) {  opModR(reg1, reg2, 0x0F, 0x12); }
-void movlhps(const Xmm& reg1, const Xmm& reg2) {  opModR(reg1, reg2, 0x0F, 0x16); }
+void movhlps(const Xmm& reg1, const Xmm& reg2) { opModR(reg1, reg2, 0x0F, 0x12); }
+void movlhps(const Xmm& reg1, const Xmm& reg2) { opModR(reg1, reg2, 0x0F, 0x16); }
 void punpckhqdq(const Xmm& xmm, const Operand& op) { opGen(xmm, op, 0x6D, 0x66, isXMM_XMMorMEM); }
 void punpcklqdq(const Xmm& xmm, const Operand& op) { opGen(xmm, op, 0x6C, 0x66, isXMM_XMMorMEM); }
 void comiss(const Xmm& xmm, const Operand& op) { opGen(xmm, op, 0x2F, 0x100, isXMM_XMMorMEM); }
@@ -442,14 +442,14 @@ void xor(const Operand& op, uint32 imm) { opRM_I(op, imm, 0x30, 6); }
 #endif
 void dec(const Operand& op) { opIncDec(op, 0x48, 1); }
 void inc(const Operand& op) { opIncDec(op, 0x40, 0); }
-void bt(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16|32|64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xa3); }
-void bt(const Operand& op, uint8 imm) { opR_ModM(op, 16|32|64, 4, 0x0f, 0xba); db(imm); }
-void bts(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16|32|64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xab); }
-void bts(const Operand& op, uint8 imm) { opR_ModM(op, 16|32|64, 5, 0x0f, 0xba); db(imm); }
-void btr(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16|32|64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xb3); }
-void btr(const Operand& op, uint8 imm) { opR_ModM(op, 16|32|64, 6, 0x0f, 0xba); db(imm); }
-void btc(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16|32|64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xbb); }
-void btc(const Operand& op, uint8 imm) { opR_ModM(op, 16|32|64, 7, 0x0f, 0xba); db(imm); }
+void bt(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16 | 32 | 64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xa3); }
+void bt(const Operand& op, uint8 imm) { opR_ModM(op, 16 | 32 | 64, 4, 0x0f, 0xba); db(imm); }
+void bts(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16 | 32 | 64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xab); }
+void bts(const Operand& op, uint8 imm) { opR_ModM(op, 16 | 32 | 64, 5, 0x0f, 0xba); db(imm); }
+void btr(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16 | 32 | 64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xb3); }
+void btr(const Operand& op, uint8 imm) { opR_ModM(op, 16 | 32 | 64, 6, 0x0f, 0xba); db(imm); }
+void btc(const Operand& op, const Reg& reg) { opModRM(reg, op, op.isREG(16 | 32 | 64) && op.getBit() == reg.getBit(), op.isMEM(), 0x0f, 0xbb); }
+void btc(const Operand& op, uint8 imm) { opR_ModM(op, 16 | 32 | 64, 7, 0x0f, 0xba); db(imm); }
 void div(const Operand& op) { opR_ModM(op, 0, 6, 0xF6); }
 void idiv(const Operand& op) { opR_ModM(op, 0, 7, 0xF6); }
 void imul(const Operand& op) { opR_ModM(op, 0, 5, 0xF6); }
@@ -1367,7 +1367,7 @@ void vpinsrw(const Xmm& x1, const Xmm& x2, const Operand& op, uint8 imm) { if (!
 void vpinsrw(const Xmm& x, const Operand& op, uint8 imm) { if (!op.isREG(32) && !op.isMEM()) throw Error(ERR_BAD_COMBINATION); opAVX_X_X_XMcvt(x, x, op, !op.isMEM(), Operand::XMM, MM_0F | PP_66, 0xC4, false); db(imm); }
 void vpinsrd(const Xmm& x1, const Xmm& x2, const Operand& op, uint8 imm) { if (!op.isREG(32) && !op.isMEM()) throw Error(ERR_BAD_COMBINATION); opAVX_X_X_XMcvt(x1, x2, op, !op.isMEM(), Operand::XMM, MM_0F3A | PP_66, 0x22, false, 0); db(imm); }
 void vpinsrd(const Xmm& x, const Operand& op, uint8 imm) { if (!op.isREG(32) && !op.isMEM()) throw Error(ERR_BAD_COMBINATION); opAVX_X_X_XMcvt(x, x, op, !op.isMEM(), Operand::XMM, MM_0F3A | PP_66, 0x22, false, 0); db(imm); }
-void vpmovmskb(const Reg32e& r, const Xmm& x) { bool isYMM= x.isYMM(); opAVX_X_X_XM(isYMM ? Ymm(r.getIdx()) : Xmm(r.getIdx()), isYMM ? ym0 : xm0, x, MM_0F | PP_66, 0xD7, true); }
+void vpmovmskb(const Reg32e& r, const Xmm& x) { bool isYMM = x.isYMM(); opAVX_X_X_XM(isYMM ? Ymm(r.getIdx()) : Xmm(r.getIdx()), isYMM ? ym0 : xm0, x, MM_0F | PP_66, 0xD7, true); }
 void vpslldq(const Xmm& x1, const Xmm& x2, uint8 imm) { opAVX_X_X_XM(x1.isYMM() ? ym7 : xm7, x1, x2, MM_0F | PP_66, 0x73, true); db(imm); }
 void vpslldq(const Xmm& x, uint8 imm) { opAVX_X_X_XM(x.isYMM() ? ym7 : xm7, x, x, MM_0F | PP_66, 0x73, true); db(imm); }
 void vpsrldq(const Xmm& x1, const Xmm& x2, uint8 imm) { opAVX_X_X_XM(x1.isYMM() ? ym3 : xm3, x1, x2, MM_0F | PP_66, 0x73, true); db(imm); }
