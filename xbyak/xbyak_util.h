@@ -14,17 +14,17 @@
 static inline __declspec(naked) void __cpuid(int[4], int)
 {
     __asm {
-        push	ebx
-            push	esi
-            mov		eax, dword ptr [esp + 4 * 2 + 8] // eaxIn
+        push    ebx
+            push    esi
+            mov     eax, dword ptr [esp + 4 * 2 + 8] // eaxIn
             cpuid
-            mov		esi, dword ptr [esp + 4 * 2 + 4] // data
-            mov		dword ptr [esi], eax
-            mov		dword ptr [esi + 4], ebx
-            mov		dword ptr [esi + 8], ecx
-            mov		dword ptr [esi + 12], edx
-            pop		esi
-            pop		ebx
+            mov     esi, dword ptr [esp + 4 * 2 + 4] // data
+            mov     dword ptr [esi], eax
+            mov     dword ptr [esi + 4], ebx
+            mov     dword ptr [esi + 8], ecx
+            mov     dword ptr [esi + 12], edx
+            pop     esi
+            pop     ebx
             ret
     }
 }
@@ -122,7 +122,7 @@ namespace Xbyak {
 #else
                 unsigned int eax, edx;
                 // xgetvb is not support on gcc 4.2
-                //		__asm__ volatile("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
+                // __asm__ volatile("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
                 __asm__ volatile(".byte 0x0f, 0x01, 0xd0" : "=a"(eax), "=d"(edx) : "c"(0));
                 return ((uint64)edx << 32) | eax;
 #endif
